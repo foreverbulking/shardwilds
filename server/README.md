@@ -2,7 +2,7 @@
 
 Server-authoritative game module: Rust compiled to WebAssembly, run inside SpacetimeDB. The browser is hostile — all gameplay truth lives here (see [`../docs/05-security-and-anticheat.md`](../docs/05-security-and-anticheat.md)).
 
-Currently a hello-world shell: a `person` table plus `init`, `client_connected`, `client_disconnected`, `add`, and `say_hello`. No gameplay yet.
+Currently a hello-world shell: a `person` table plus `init`, `client_connected`, `client_disconnected`, `add`, `say_hello`, and a `ping` health-check reducer. No gameplay yet.
 
 ## Prerequisites
 
@@ -39,6 +39,7 @@ spacetime dev
 # Inspect
 spacetime logs shardwilds --server local              # module logs
 spacetime sql  shardwilds "SELECT * FROM person"      # query a table
+spacetime call shardwilds ping --server local         # health check (logs "ping from <identity>")
 spacetime call shardwilds say_hello --server local    # invoke a reducer
 ```
 

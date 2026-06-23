@@ -21,6 +21,12 @@ pub fn identity_disconnected(_ctx: &ReducerContext) {
 }
 
 #[spacetimedb::reducer]
+pub fn ping(ctx: &ReducerContext) {
+    // Health check: confirms the module is published and reducers are reachable.
+    log::info!("ping from {}", ctx.sender());
+}
+
+#[spacetimedb::reducer]
 pub fn add(ctx: &ReducerContext, name: String) {
     ctx.db.person().insert(Person { name });
 }
