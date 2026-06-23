@@ -47,10 +47,14 @@ Config:
 - `spacetime.json` — `server: local`, `module-path: .` (local-first for Phase 0; pass `--server maincloud` for cloud later).
 - `spacetime.local.json` — local database name (`shardwilds`).
 
-## Client Bindings (later story)
+## Client Bindings
+
+Generated TypeScript bindings live in `../client/src/module_bindings/` (committed). Regenerate after changing tables/reducers:
 
 ```bash
-spacetime generate --lang typescript --out-dir ../client/src/module_bindings --project-path .
+spacetime generate --lang typescript --out-dir ../client/src/module_bindings --module-path .
 ```
+
+Client needs the matching SDK: `spacetimedb` (currently `2.6.0`) in `client/package.json`.
 
 See [`CLAUDE.md`](CLAUDE.md) in this folder for SpacetimeDB concepts, CLI, and Rust SDK reference.
