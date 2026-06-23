@@ -27,6 +27,7 @@ Before making changes, read:
 - `13-local-dev-setup.md`: machine setup and commands
 - `14-mcp-setup.md`: MCP server setup and safety
 - `15-story-template.md`: epic/story/task format
+- `16-phase-backlog-micro.md`: micro story backlog — one focused session per story
 
 ## Current Build Target
 
