@@ -1,23 +1,27 @@
 import { useEffect, useRef } from 'react'
 
-export interface MoveInput {
+export interface PlayerInput {
   forward: boolean
   back: boolean
   left: boolean
   right: boolean
+  /** Edge-triggered: set true once per Space press, consumed by the player. */
+  jumpRequested: boolean
 }
 
-/** Tracks WASD / arrow key state in a ref (no re-renders). Client-only input. */
+/** Tracks movement keys + an edge-triggered jump in a ref (no re-renders). */
 export function useWASD() {
-  const input = useRef<MoveInput>({
+  const input = useRef<PlayerInput>({
     forward: false,
     back: false,
     left: false,
     right: false,
+    jumpRequested: false,
   })
+  const jumpHeld = useRef(false)
 
   useEffect(() => {
-    const setKey = (code: string, pressed: boolean) => {
+    const setMove = (code: string, pressed: boolean) => {
       switch (code) {
         case 'KeyW':
         case 'ArrowUp':
@@ -37,8 +41,25 @@ export function useWASD() {
           break
       }
     }
-    const onKeyDown = (event: KeyboardEvent) => setKey(event.code, true)
-    const onKeyUp = (event: KeyboardEvent) => setKey(event.code, false)
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        // Edge trigger: one jump per press, ignore key auto-repeat.
+        if (!jumpHeld.current) {
+          input.current.jumpRequested = true
+          jumpHeld.current = true
+        }
+        return
+      }
+      setMove(event.code, true)
+    }
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        jumpHeld.current = false
+        return
+      }
+      setMove(event.code, false)
+    }
 
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
