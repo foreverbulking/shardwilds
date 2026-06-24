@@ -34,33 +34,33 @@ import {
 } from "spacetimedb";
 
 // Import all reducer arg schemas
-import AddReducer from "./add_reducer";
 import PingReducer from "./ping_reducer";
-import SayHelloReducer from "./say_hello_reducer";
 
 // Import all procedure arg schemas
 
 // Import all table schema definitions
-import PersonRow from "./person_table";
+import PlayerRow from "./player_table";
 
 /** Type-only namespace exports for generated type groups. */
 
 /** The schema information for all tables in this module. This is defined the same was as the tables would have been defined in the server. */
 const tablesSchema = __schema({
-  person: __table({
-    name: 'person',
+  player: __table({
+    name: 'player',
     indexes: [
+      { accessor: 'identity', name: 'player_identity_idx_btree', algorithm: 'btree', columns: [
+        'identity',
+      ] },
     ],
     constraints: [
+      { name: 'player_identity_key', constraint: 'unique', columns: ['identity'] },
     ],
-  }, PersonRow),
+  }, PlayerRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
-  __reducerSchema("add", AddReducer),
   __reducerSchema("ping", PingReducer),
-  __reducerSchema("say_hello", SayHelloReducer),
 );
 
 /** The schema information for all procedures in this module. This is defined the same way as the procedures would have been defined in the server. */

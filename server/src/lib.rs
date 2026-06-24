@@ -1,40 +1,53 @@
-use spacetimedb::{ReducerContext, Table};
+use spacetimedb::{Identity, ReducerContext, Table, Timestamp};
 
-#[spacetimedb::table(accessor = person, public)]
-pub struct Person {
-    name: String,
+#[spacetimedb::table(accessor = player, public)]
+pub struct Player {
+    #[primary_key]
+    identity: Identity,
+    created_at: Timestamp,
+    last_seen: Timestamp,
+    online: bool,
 }
 
 #[spacetimedb::reducer(init)]
-pub fn init(_ctx: &ReducerContext) {
-    // Called when the module is initially published
-}
+pub fn init(_ctx: &ReducerContext) {}
 
 #[spacetimedb::reducer(client_connected)]
-pub fn identity_connected(_ctx: &ReducerContext) {
-    // Called everytime a new client connects
+pub fn identity_connected(ctx: &ReducerContext) {
+    let sender = ctx.sender();
+    let now = ctx.timestamp;
+    match ctx.db.player().identity().find(sender) {
+        Some(existing) => {
+            ctx.db.player().identity().update(Player {
+                last_seen: now,
+                online: true,
+                ..existing
+            });
+        }
+        None => {
+            ctx.db.player().insert(Player {
+                identity: sender,
+                created_at: now,
+                last_seen: now,
+                online: true,
+            });
+        }
+    }
 }
 
 #[spacetimedb::reducer(client_disconnected)]
-pub fn identity_disconnected(_ctx: &ReducerContext) {
-    // Called everytime a client disconnects
+pub fn identity_disconnected(ctx: &ReducerContext) {
+    let sender = ctx.sender();
+    if let Some(existing) = ctx.db.player().identity().find(sender) {
+        ctx.db.player().identity().update(Player {
+            last_seen: ctx.timestamp,
+            online: false,
+            ..existing
+        });
+    }
 }
 
 #[spacetimedb::reducer]
 pub fn ping(ctx: &ReducerContext) {
-    // Health check: confirms the module is published and reducers are reachable.
     log::info!("ping from {}", ctx.sender());
-}
-
-#[spacetimedb::reducer]
-pub fn add(ctx: &ReducerContext, name: String) {
-    ctx.db.person().insert(Person { name });
-}
-
-#[spacetimedb::reducer]
-pub fn say_hello(ctx: &ReducerContext) {
-    for person in ctx.db.person().iter() {
-        log::info!("Hello, {}!", person.name);
-    }
-    log::info!("Hello, World!");
 }
