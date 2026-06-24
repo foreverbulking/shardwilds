@@ -1,8 +1,14 @@
-import { useRef } from 'react'
+import { Suspense, useRef } from 'react'
 import type { RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Group, Vector3 } from 'three'
 import { useWASD } from './useWASD'
+import LyraModel from './LyraModel'
+import type { LimbHandles } from './LyraModel'
+import { useWalkCycle } from './useWalkCycle'
+
+// GLB is ~6.4 units tall (Z-up source). Scale to roughly player height.
+const MODEL_SCALE = 0.6
 
 const SPEED = 5 // world units per second
 const JUMP_SPEED = 7 // initial upward velocity
@@ -12,6 +18,10 @@ export default function Player({ positionRef }: { positionRef: RefObject<Vector3
   const groupRef = useRef<Group>(null)
   const input = useWASD()
   const verticalVelocity = useRef(0)
+  const limbsRef = useRef<LimbHandles | null>(null)
+  const isMovingRef = useRef(false)
+
+  useWalkCycle(limbsRef, isMovingRef)
 
   useFrame((_, delta) => {
     const position = positionRef.current
@@ -24,7 +34,8 @@ export default function Player({ positionRef }: { positionRef: RefObject<Vector3
     if (input.current.back) dz += 1
     if (input.current.left) dx -= 1
     if (input.current.right) dx += 1
-    if (dx !== 0 || dz !== 0) {
+    isMovingRef.current = dx !== 0 || dz !== 0
+    if (isMovingRef.current) {
       const length = Math.hypot(dx, dz)
       position.x += (dx / length) * SPEED * delta
       position.z += (dz / length) * SPEED * delta
@@ -48,16 +59,11 @@ export default function Player({ positionRef }: { positionRef: RefObject<Vector3
 
   return (
     <group ref={groupRef}>
-      {/* body */}
-      <mesh position={[0, 0.7, 0]}>
-        <capsuleGeometry args={[0.3, 0.8, 8, 16]} />
-        <meshStandardMaterial color="#3a6ea5" />
-      </mesh>
-      {/* head */}
-      <mesh position={[0, 1.6, 0]}>
-        <sphereGeometry args={[0.28, 24, 24]} />
-        <meshStandardMaterial color="#e8c39e" />
-      </mesh>
+      <Suspense fallback={null}>
+        <group scale={MODEL_SCALE} castShadow>
+          <LyraModel limbsRef={limbsRef} />
+        </group>
+      </Suspense>
     </group>
   )
 }
