@@ -3,12 +3,12 @@ import type { RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Group, Vector3 } from 'three'
 import { useWASD } from './useWASD'
-import LyraModel from './LyraModel'
-import type { LimbHandles } from './LyraModel'
+import SwCharacterModel from './SwCharacterModel'
+import type { LimbHandles } from './SwCharacterModel'
 import { useWalkCycle } from './useWalkCycle'
 
-// GLB is ~6.4 units tall (Z-up source). Scale to roughly player height.
-const MODEL_SCALE = 0.6
+// sw_adventurer_base_v001 exported at ~1.7 BU = ~1.7m in Three.js — no scaling needed.
+const MODEL_SCALE = 1.0
 
 const SPEED = 5 // world units per second
 const JUMP_SPEED = 7 // initial upward velocity
@@ -61,7 +61,7 @@ export default function Player({ positionRef }: { positionRef: RefObject<Vector3
     <group ref={groupRef}>
       <Suspense fallback={null}>
         <group scale={MODEL_SCALE} castShadow>
-          <LyraModel limbsRef={limbsRef} />
+          <SwCharacterModel limbsRef={limbsRef} />
         </group>
       </Suspense>
     </group>
