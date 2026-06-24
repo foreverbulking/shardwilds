@@ -17,3 +17,7 @@ node_modules/
 target/
 dist/
 *.log
+
+# Blender working files (large source files, regeneratable)
+assets/working/
+*.blend1
