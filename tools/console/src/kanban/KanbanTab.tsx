@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Board } from './Board';
+import { CardExpanded } from './CardExpanded';
 import { useStories } from './useStories';
 import type { Story } from './types';
 
 export function KanbanTab() {
-  const { stories, loading, error } = useStories();
+  const { stories, loading, error, refresh } = useStories();
   const [selected, setSelected] = useState<Story | null>(null);
 
   if (loading) {
@@ -26,5 +27,10 @@ export function KanbanTab() {
     );
   }
 
-  return <Board stories={stories} onSelect={setSelected} />;
+  return (
+    <>
+      <Board stories={stories} onSelect={setSelected} />
+      <CardExpanded story={selected} onClose={() => setSelected(null)} onSaved={refresh} />
+    </>
+  );
 }

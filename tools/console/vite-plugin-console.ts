@@ -151,6 +151,34 @@ const middleware: Connect.NextHandleFunction = async (req, res, next) => {
     return;
   }
 
+  if (url.startsWith('/api/console/stories/') && method === 'PUT') {
+    const storyId = decodeURIComponent(url.slice('/api/console/stories/'.length));
+    if (!storyId) {
+      res.statusCode = 400;
+      res.end(JSON.stringify({ error: 'Missing story id' }));
+      return;
+    }
+    try {
+      const chunks: Buffer[] = [];
+      for await (const chunk of req) chunks.push(chunk as Buffer);
+      const body = JSON.parse(Buffer.concat(chunks).toString('utf-8')) as { raw: string };
+      const existing = await readStory(storyId);
+      if (!existing) {
+        res.statusCode = 404;
+        res.end(JSON.stringify({ error: `Story not found: ${storyId}` }));
+        return;
+      }
+      await fs.writeFile(existing.path, body.raw, 'utf-8');
+      broadcast({ type: 'stories-changed', path: existing.path });
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ ok: true, path: existing.path }));
+    } catch (error) {
+      res.statusCode = 500;
+      res.end(JSON.stringify({ error: (error as Error).message }));
+    }
+    return;
+  }
+
   if (url === '/api/console/architecture-doc' && method === 'GET') {
     try {
       const content = await readArchitectureDoc();
