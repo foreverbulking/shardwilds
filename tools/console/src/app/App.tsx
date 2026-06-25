@@ -3,10 +3,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { useActiveTab } from './useActiveTab';
 import { KanbanTab } from '../kanban/KanbanTab';
 import { ArchitectureTab } from '../architecture/ArchitectureTab';
-
-function ApiRunnerPlaceholder() {
-  return <div className="p-6 text-muted-foreground">API Runner tab (placeholder)</div>;
-}
+import { ApiRunnerTab } from '../api-runner/ApiRunnerTab';
 
 export default function App() {
   const activeTab = useActiveTab((state) => state.activeTab);
@@ -18,7 +15,7 @@ export default function App() {
         <ErrorBoundary>
           {activeTab === 'kanban' && <KanbanTab />}
           {activeTab === 'architecture' && <ArchitectureTab />}
-          {activeTab === 'api-runner' && <ApiRunnerPlaceholder />}
+          {activeTab === 'api-runner' && <ApiRunnerTab />}
         </ErrorBoundary>
       </main>
     </div>
