@@ -1,10 +1,7 @@
 import { TabNav } from './TabNav';
 import { ErrorBoundary } from './ErrorBoundary';
 import { useActiveTab } from './useActiveTab';
-
-function KanbanPlaceholder() {
-  return <div className="p-6 text-muted-foreground">Kanban tab (placeholder)</div>;
-}
+import { KanbanTab } from '../kanban/KanbanTab';
 
 function ArchitecturePlaceholder() {
   return <div className="p-6 text-muted-foreground">Architecture tab (placeholder)</div>;
@@ -22,7 +19,7 @@ export default function App() {
       <TabNav />
       <main className="flex-1 overflow-auto">
         <ErrorBoundary>
-          {activeTab === 'kanban' && <KanbanPlaceholder />}
+          {activeTab === 'kanban' && <KanbanTab />}
           {activeTab === 'architecture' && <ArchitecturePlaceholder />}
           {activeTab === 'api-runner' && <ApiRunnerPlaceholder />}
         </ErrorBoundary>
