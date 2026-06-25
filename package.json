@@ -25,5 +25,8 @@
     "@modelcontextprotocol/server-memory": "^2026.1.26",
     "@modelcontextprotocol/server-sequential-thinking": "^2025.12.18",
     "@playwright/mcp": "^0.0.76"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3"
   }
 }

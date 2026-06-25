@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Input } from '../components/ui/input';
 import type { ReducerDef } from './types';
-import { parseReducerDefinitions } from './reducerList';
+import { parseReducerDefinitions } from './reducers';
 
 interface ReducerInfo {
   file: string;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseReducerDefinitions } from '../src/api-runner/reducerList';
+import { parseReducerDefinitions } from '../src/api-runner/reducers';
 
 describe('parseReducerDefinitions', () => {
   it('extracts reducers from sample bindings content', () => {
