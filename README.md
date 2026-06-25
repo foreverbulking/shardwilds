@@ -19,6 +19,7 @@ Browser-based stylized sandbox action MMO.
 | `server/` | SpacetimeDB module — not scaffolded yet (STORY-003) |
 | `assets/` | Art pipeline: `source/` → `raw/` → `processed/`; licenses in `licenses/` |
 | `tools/` | Dev and build scripts |
+| `tools/console/` | Dev console — 3 tabs (Kanban, Architecture, API Runner). `pnpm dev` → http://localhost:5174 |
 | `docs/` | Design, architecture, process — start at `docs/00-project-index.md` |
 | `docs/stories/` | Story backlog (template: `docs/15-story-template.md`) |
 | `prompts/` | Reusable Claude prompts |
