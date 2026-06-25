@@ -4,6 +4,8 @@
 
 # Dependencies
 node_modules/
+# Root uses package-lock.json (npm). pnpm-lock.yaml here means a stray pnpm install ran at root — ignore.
+pnpm-lock.yaml
 
 # Environment (never commit secrets)
 .env
